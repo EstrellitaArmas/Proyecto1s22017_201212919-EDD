@@ -78,21 +78,20 @@
                                    <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
                                    <input class="form-control" type="password" id="pass" name="pass" placeholder="Password">
                                 </div><br>
-                                <button class="submit"><i class="fa fa-hand-o-right" aria-hidden="true"></i>&nbsp; Iniciar Session</button> 
+                                <a href="Registro.jsp"><b>&nbsp;Registrarse</b></a>
+                                &nbsp;
+                                <button class="submit"> Iniciar Session &nbsp;<i class="fa fa-arrow-right fa-1x" aria-hidden="true"></i></button>                                 
                                   <!--asigno a la variable mensaje creada arriba un error en dado caso lo haya -->
                                  <%
-                                     mensaje = Login.getError();
+                                    mensaje = Login.getError();
                                  %>
                                  <!--muestro el mensaje (o la variable)-->
-                                 <br><br>
+                                 <br><br> 
                                  <font color="red"><%=mensaje%></font>
                              </form> 
                           </div>
                        </div>
                     </div>  
-                     <div class="social">
-                        <a href="Inicio.jsp"><i class="fa fa-arrow-left fa-3x"></i><h4><b>Regresar</b></h4></a>        
-                     </div>
                  </div>
               </div>
            </div>

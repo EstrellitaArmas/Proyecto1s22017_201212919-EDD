@@ -5,8 +5,6 @@
  */
 package Menu;
 
-import Helpers.Conexion;
-import static Inicio.Login.setError;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import java.io.IOException;
@@ -19,12 +17,26 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Helpers.Conexion;
+import Helpers.FileJsonDTO;
+import Helpers.ParserJson;
 import Inicio.Login;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 /**
  *
  * @author estre
  */
-@WebServlet(name = "Crear", urlPatterns = {"/Crear"})
+@WebServlet(name = "Crear", urlPatterns = {"/crear"})
+@MultipartConfig
 public class Crear extends HttpServlet {
 
    
@@ -46,39 +58,66 @@ public class Crear extends HttpServlet {
    }
 
    String r = "";
-   public static String error="";
-
-   public static String getError() {
-      return error;
-   }
-
-   public static void setError(String error) {
-      Login.error = error;
-   }
     
    @Override
    protected void doPost(HttpServletRequest request, HttpServletResponse response)
            throws ServletException, IOException {
-        String usuario = request.getParameter("user"); 
-        String pass = request.getParameter("pass");    
-        RequestBody formBody = new FormEncodingBuilder()
-                .add("user",usuario)
-                .add("pass", pass)
-                .build();
-        r = Conexion.getString("validarUsuario", formBody);
-        if(r.equalsIgnoreCase("true")){
-            HttpSession sesion = request.getSession(true);
-            HttpSession sesion2 = request.getSession(true);
-            sesion.setAttribute("sesionusuario",usuario);
-            sesion2.setAttribute("sesionpass",pass);
-            response.sendRedirect("Menu.jsp");
-            //processRequest(request, response);
-        }else{
-            HttpSession sesion2 = request.getSession(true);
-            setError("Usuario o Contraseña invalidos");
-            response.sendRedirect("Login.jsp");  
-
-        }       
+//      String pathArchivo = request.getRequestURI();
+//      System.out.println(pathArchivo);
+      try{
+         FileItemFactory factory = new DiskFileItemFactory();
+         ServletFileUpload upload = new ServletFileUpload(factory);
+         // Los items obtenidos serán cada uno de los campos del formulario, tanto campos normales como ficheros subidos.
+         List items = upload.parseRequest(request);
+         // Se recorren todos los items, que son de tipo FileItem
+         for (Object item : items) {
+            FileItem uploaded = (FileItem) item;
+            // Hay que comprobar si es un campo de formulario. Si no lo es, se guarda el fichero subido donde nos interese
+            if (!uploaded.isFormField()) {
+               
+               File fichero = new File("C:\\Users\\estre\\Desktop\\" + uploaded.getName()); 
+               String fileJsonStr = "";
+               try {
+                  // Con este código se obtienen los bytes del archivo.
+                  FileInputStream fileInputStream = new FileInputStream(fichero);
+                  BufferedInputStream input = new BufferedInputStream(fileInputStream);
+                  byte[] fileArray = new byte[(int) fichero.length()];
+                  input.read(fileArray); // el contenido leido se almacena en el array de bytes
+                  input.close();
+                  
+                  //Se almacena el array de bytes y el nombre en un objeto
+                  FileJsonDTO fileJson = new FileJsonDTO();
+                  fileJson.setFileBytes(fileArray);
+                  fileJson.setFileName(fichero.getName());
+                  //Se convierte el objeto en un string tipo Json
+                  fileJsonStr = ParserJson.parseObjectToStr(fileJson);
+              
+                  System.out.println("bytes del archivo: "+fileJsonStr);
+               } catch (Exception e) {
+                   System.out.println("ERROR: "+ e);
+               }
+               // se envia hacia servidor 
+               HttpSession sesion = request.getSession(true);
+               String user = sesion.getAttribute("sesionusuario").toString();
+               RequestBody formBody = new FormEncodingBuilder()
+                       .add("fileJsonStr", fileJsonStr)
+                       .add("user",user)
+                       .build();
+               r = Conexion.postString("insertarArchivo", formBody);               
+               System.out.println("fichero guardado con exito");
+               
+            } else {
+               // No es archivo, mostrar mensaje de error aqui.....
+//               String key = uploaded.getFieldName();
+//               String valor = uploaded.getString();
+//               System.out.println("No es un archivo: "+key + " valor: "+valor);
+               
+            }
+         }
+         response.sendRedirect("Menu.jsp");  
+      }catch(Exception e){
+         System.out.println("ERROR: "+ e);
+      }     
    }
 
    /**

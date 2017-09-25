@@ -156,7 +156,7 @@ class ArbolB(object):
 	
 	#Crear Archivo
 	def dibujarArbol(self):
-		archivo=open('arbolB.txt', 'w')
+		archivo=open('arbolB.dot', 'w')
 		archivo.write('digraph G{\n')
 		archivo.write("node [shape = record];\n");
 		archivo.write("rankdir = TD;\n");

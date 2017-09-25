@@ -50,7 +50,7 @@ public class Registro extends HttpServlet {
                 .add("user",usuario)
                 .add("pass", pass)
                 .build();
-         r = Conexion.getString("insertarUsuario", formBody);
+         r = Conexion.postString("insertarUsuario", formBody);
          if(r.equalsIgnoreCase("true")){
             HttpSession sesion = request.getSession(true);
             HttpSession sesion2 = request.getSession(true);

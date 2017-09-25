@@ -17,10 +17,11 @@ import java.net.URL;
  * @author estre
  */
 public class Conexion {
-   public static String getString(String metodo, RequestBody formBody) {
+   private static String IpLocal = "192.168.1.3"; 
+   public static String postString(String metodo, RequestBody formBody) {
 
         try {
-            URL url = new URL("http://192.168.1.3:5000/" + metodo);
+            URL url = new URL("http://"+IpLocal+":5000/" + metodo);
             Request req = new Request.Builder().url(url).post(formBody).build();
             Response resp = webClient.newCall(req).execute();//Aqui obtiene la respuesta en dado caso si hayas pues un return en python
             String response_string = resp.body().string();//y este seria el string de las respuesta
@@ -32,6 +33,24 @@ public class Conexion {
             //java.util.logging.Logger.getLogger(proyecto2.TestWebServer.class.getName()).log(Level.SEVERE, null, ex);
         System.out.println(ex.getMessage());
         }
-        return "true";
+        return "false";
+    }
+   
+   public static String getString(String metodo, RequestBody formBody) {
+
+        try {
+            URL url = new URL("http://"+IpLocal+":5000/" + metodo);
+            Request req = new Request.Builder().url(url).get().build();
+            Response resp = webClient.newCall(req).execute();//Aqui obtiene la respuesta en dado caso si hayas pues un return en python
+            String response_string = resp.body().string();//y este seria el string de las respuesta
+            return response_string;
+        } catch (MalformedURLException ex) {
+            //java.util.logging.Logger.getLogger(proyecto2.TestWebServer.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
+        } catch (Exception ex) {
+            //java.util.logging.Logger.getLogger(proyecto2.TestWebServer.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
+        }
+        return "false";
     }
 }

@@ -4,6 +4,8 @@
     Author     : estre
 --%>
 
+<%@page import="Inicio.Registro"%>
+<%@page import="Inicio.Login"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -32,6 +34,11 @@
         <script src="js/main.js"></script>
     </head>
     <body  data-spy="scroll" data-target="#main-navbar">
+       <%
+          session.setAttribute("sesionusuario", "");
+          Registro.setError("");
+          Login.setError("");
+       %>
         <div class='preloader'><div class='loaded'>&nbsp;</div></div>
         <div id="menubar" class="main-menu">	
             <nav class="navbar navbar-default navbar-fixed-top">

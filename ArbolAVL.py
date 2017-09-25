@@ -13,14 +13,15 @@ class NodoAVL(object):
 class ArbolAVL(object):
     def __init__ (self):
             self.raiz = None
-            valor = ""                
+            valor = "" 
+            self.byteFile = None               
 
     def agregarAVL1(self, nuevoNodo, usuario): #nodo avl y usuario de la circular       
             temp = self.retornarAVL(nuevoNodo, usuario) 
             if temp == None:
                 h = Logical(False)
                 usuario.raizAVL.raiz = self.agregarAVL(usuario.raizAVL.raiz, nuevoNodo, h)
-                print("nodo agregado correctamente")
+                print("nodo agregado correctamente"+ str(nuevoNodo.nombre))
             else:
                 print("ya existe")
         
@@ -28,7 +29,7 @@ class ArbolAVL(object):
         if raiz == None:
             raiz = nuevoNodo            
             h.setLogical(True)
-        elif int(nuevoNodo.nombre) < int(raiz.nombre):
+        elif nuevoNodo.nombre < raiz.nombre:
             nodoIz = self.agregarAVL(raiz.izquierda, nuevoNodo, h)
             raiz.izquierda = nodoIz
             if h.getLogical() == True:
@@ -45,7 +46,7 @@ class ArbolAVL(object):
                     else:
                         raiz = self.rotacionID(raiz, nodo1)
                     h.setLogical(False)
-        elif int(nuevoNodo.nombre) > int(raiz.nombre):
+        elif nuevoNodo.nombre > raiz.nombre:
             nodoDr = self.agregarAVL(raiz.derecha, nuevoNodo, h)
             raiz.derecha = nodoDr
             if h.getLogical() == True:
@@ -69,14 +70,15 @@ class ArbolAVL(object):
         self.buscarAVL(nodoCircular.raizAVL.raiz, nuevoNodo, nodoCircular)
         return nodoCircular.raizAVL.encontro
     
-    def buscarAVL(self, raiz, nuevoNodo, nodoCircular):  # raiz, nodo avl y nodo Circular
+    def buscarAVL(self, raiz, nombre, nodoCircular):  # raiz, nodo avl y nodo Circular
         if raiz != None:
-            if nuevoNodo.nombre == raiz.nombre:
+            if nombre == raiz.nombre:
                 nodoCircular.raizAVL.encontro = raiz
                 #self.encontro = raiz
             else:
-                self.buscarAVL(raiz.izquierda, nuevoNodo, nodoCircular)
-                self.buscarAVL(raiz.derecha, nuevoNodo, nodoCircular)                    
+                self.buscarAVL(raiz.izquierda, nombre, nodoCircular)
+                self.buscarAVL(raiz.derecha, nombre, nodoCircular) 
+
                     
        
     def rotacionID(self, nodo, nodo1):
@@ -140,7 +142,7 @@ class ArbolAVL(object):
     def graficarArbolAVL(self, nodoCircular):
         nodoAVLTemp = nodoCircular.raizAVL
         self.digraf = "digraph G{\n"
-        archivo = open("arbol.txt", 'w')
+        archivo = open("arbol.dot", 'w')
         self.graficarPreOrden(nodoAVLTemp.raiz)
         self.digraf += "\n}"
         archivo.write(self.digraf)
@@ -148,19 +150,39 @@ class ArbolAVL(object):
 
     def graficarPreOrden(self, nuevoNodo):
         if nuevoNodo != None:
-            self.digraf += "nodo_" + str(nuevoNodo.nombre) + ' [label="' +str(nuevoNodo.nombre) +str(nuevoNodo.archivo) + '"]\n'
+            mensajeFin = nuevoNodo.nombre.replace(".", "")
+            mensajeFin = mensajeFin.replace("-", "")
+            mensajeFin = mensajeFin.replace("_", "")
+            mensajeFin = mensajeFin.replace(" ", "")
+            self.digraf += "nodo_" + str(mensajeFin) + ' [label="' +str(mensajeFin) +'"]\n'
             if nuevoNodo.izquierda != None:
-                self.digraf += "nodo_" + str(nuevoNodo.nombre) + " -> " "nodo_" + str(nuevoNodo.izquierda.nombre) + "\n"
+                mensajeIzq = nuevoNodo.izquierda.nombre.replace(".", "")
+                mensajeIzq = mensajeIzq.replace("-", "")
+                mensajeIzq = mensajeIzq.replace("_", "")
+                mensajeIzq = mensajeIzq.replace(" ", "")
+                self.digraf += "nodo_" + str(mensajeFin) + " -> " "nodo_" + str(mensajeIzq) + "\n"
                 self.graficarPreOrden(nuevoNodo.izquierda)
             else:
                 pass
             if nuevoNodo.derecha != None:
-                self.digraf += "nodo_" + str(nuevoNodo.nombre) + " -> " "nodo_" + str(nuevoNodo.derecha.nombre) + "\n"
+                mensajeDer = nuevoNodo.derecha.nombre.replace(".", "")
+                mensajeDer = mensajeDer.replace("-", "")
+                mensajeDer = mensajeDer.replace("_", "")
+                mensajeDer = mensajeDer.replace(" ", "")
+                self.digraf += "nodo_" + str(mensajeFin) + " -> " "nodo_" + str(mensajeDer) + "\n"
                 self.graficarPreOrden(nuevoNodo.derecha)                   
             else:
                 pass
         else:
             pass
+
+    def buscarArchivo(self, raiz, nombre):  # raiz nodo avl y nombre del archivo
+        if raiz != None:
+            if nombre == raiz.nombre:
+                self.byteFile = raiz
+            else:
+                self.buscarArchivo(raiz.izquierda, nombre)
+                self.buscarArchivo(raiz.derecha, nombre) 
 
 class Logical():
     def __init__ (self, valor=None):

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Helpers.Conexion;
+import Helpers.Graficador;
 
 /**
  *
@@ -50,12 +51,27 @@ public class Login extends HttpServlet {
                 .add("user",usuario)
                 .add("pass", pass)
                 .build();
-        r = Conexion.getString("validarUsuario", formBody);
+        r = Conexion.postString("validarUsuario", formBody);
         if(r.equalsIgnoreCase("true")){
+            String jsonArbol = Conexion.postString("obtenerRaices", formBody);
             HttpSession sesion = request.getSession(true);
             HttpSession sesion2 = request.getSession(true);
             sesion.setAttribute("sesionusuario",usuario);
             sesion2.setAttribute("sesionpass",pass);
+            //Parsear json y enviar array de carpetas;
+            System.out.println(jsonArbol);
+            request.getSession().setAttribute("variable", new Integer(22));
+            //
+            ///
+            ///
+            ///
+            ///
+            ///
+            // 
+            //Generar graficas de las estructuras existentes
+           // String grafos = Conexion.getString("graficarArboles", formBody);
+            
+            //Redireccionar a la pagina menu 
             response.sendRedirect("Menu.jsp");
             //processRequest(request, response);
         }else{
