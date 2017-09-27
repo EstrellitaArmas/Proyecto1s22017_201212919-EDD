@@ -63,6 +63,13 @@ def recuperarArchivo():
     jsonFile = json.dumps(objFile, default = jsonDefault )
     return jsonFile
 
+@app.route('/recuperarCarpeta',methods=['POST']) 
+def recuperarCarpeta():
+    arbolB = listaUsuarios.obtenerArbolB(request.data)
+    arbolB.existeCarpeta(NodoB(30, "Videos"),arbolB.inicio)
+    arbolAVL = arbolB.encontrado.raizAVL
+    jsonString = json.dumps(arbolB.encontrado, default = jsonDefault )
+    return jsonString
 
 @app.route('/insertarCarpeta',methods=['POST']) 
 def insertarNodoB():
@@ -80,13 +87,6 @@ def insertarNodoB():
     raizB.dibujarArbol() 
     usuario.raizRoot.raizB = raizB    
     return "true"
-
-@app.route('/recuperarCarpeta',methods=['POST']) 
-def recuperarCarpeta():
-    arbolB = listaUsuarios.obtenerArbolB(request.data)
-    arbolB.existeCarpeta(NodoB(30, "Videos"),arbolB.inicio)
-    jsonString = json.dumps(arbolB.encontrado, default = jsonDefault )
-    return jsonString
 
 @app.route('/obtenerRaices',methods=['POST']) 
 def obtenerRaices():
