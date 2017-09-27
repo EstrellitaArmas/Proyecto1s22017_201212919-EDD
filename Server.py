@@ -52,6 +52,22 @@ def insertarNodoAVL():
     raiz.graficarArbolAVL(usuario)
     return "true"
 
+@app.route('/insertarArchivoTEMP',methods=['POST']) 
+def insertarNodoAVLTEMP():
+    #fileJson = request.form["fileJsonStr"]
+    objFile = request.json
+    usuario = listaUsuarios.obtenerUsuario(objFile["user"])  
+    if(objFile["carpeta"]!=None):
+        arbolB = listaUsuarios.obtenerArbolB(request.data)
+        arbolB.existeCarpeta(NodoB(objFile["idCarpeta"], objFile["carpeta"]),arbolB.inicio)
+        arbolAVL = arbolB.encontrado.raizAVL
+    else :    
+        arbolAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])   
+        
+    arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),usuario)
+    arbolAVL.graficarArbolAVL(usuario)
+    return "true"
+
 @app.route('/recuperarArchivo', methods=['POST'])
 def recuperarArchivo():
     arbolAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])   #retorna arbolAvl del usuario 
