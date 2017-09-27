@@ -22,11 +22,13 @@ def jsonDefault(object):
 
 @app.route('/insertarUsuario',methods=['POST']) 
 def insertarUsuario():
-    parametro = listaUsuarios.validarUser(request.form["user"],request.form["pass"])
+    usuario = request.json
+    #usuario = json.loads(usuario)
+    parametro = listaUsuarios.validarUser(usuario["user"],usuario["pass"])
     if parametro =="true":
         return "false"
     else:
-        listaUsuarios.insertar(NodoDoble(request.form["user"],request.form["pass"]))
+        listaUsuarios.insertar(NodoDoble(usuario["user"],usuario["pass"]))
         listaUsuarios.imprimir()
         return "true"
     
@@ -64,26 +66,32 @@ def recuperarArchivo():
 
 @app.route('/insertarCarpeta',methods=['POST']) 
 def insertarNodoB():
-    raizB = listaUsuarios.obtenerArbolB("estergema")
+    usuario = listaUsuarios.obtenerUsuario(request.data)
+    raizB = listaUsuarios.obtenerArbolB(request.data)
+    if( raizB == None):
+        raizB = ArbolB()
     #raizB = listaUsuarios.obtenerArbolB(request.form["user"])
     #raizB.crearNodoInsertar(request.form["id"], request.form["nombre"], "C1")
-    raizB.crearNodoInsertar(10, "Carpetas", "C1")
-    raizB.crearNodoInsertar(20, "Documentos", "C2")
-    raizB.crearNodoInsertar(30, "Videos", "C3")  
-    raizB.crearNodoInsertar(40, "APK", "C4")  
-    raizB.crearNodoInsertar(50, "Archivos", "C5") 
-    raizB.crearNodoInsertar(60, "Carpetas", "C6")
-    raizB.crearNodoInsertar(70, "Documentos", "C7")
-    raizB.crearNodoInsertar(80, "Videos", "C8")  
-    raizB.crearNodoInsertar(90, "APK", "C9")  
-    raizB.crearNodoInsertar(100, "Archivos", "C10") 
+    raizB.crearNodoInsertar(10, request.data)
+    raizB.crearNodoInsertar(20, "Documentos")
+    raizB.crearNodoInsertar(30, "Videos")  
+    raizB.crearNodoInsertar(40, "APK")  
+    raizB.crearNodoInsertar(50, "Archivos") 
     raizB.dibujarArbol() 
+    usuario.raizRoot.raizB = raizB    
     return "true"
+
+@app.route('/recuperarCarpeta',methods=['POST']) 
+def recuperarCarpeta():
+    arbolB = listaUsuarios.obtenerArbolB(request.data)
+    arbolB.existeCarpeta(NodoB(30, "Videos"),arbolB.inicio)
+    jsonString = json.dumps(arbolB.encontrado, default = jsonDefault )
+    return jsonString
 
 @app.route('/obtenerRaices',methods=['POST']) 
 def obtenerRaices():
-    raizAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])
-    raizB = listaUsuarios.obtenerArbolB(request.form["user"])
+    raizAVL = listaUsuarios.obtenerArbolAVL(request.data)
+    raizB = listaUsuarios.obtenerArbolB(request.data)
     raices = {'raizAVL': raizAVL ,'raizB': raizB}
     jsonString = json.dumps(raices, default = jsonDefault )
     print str(jsonString)
@@ -97,6 +105,6 @@ def he():
     return "hola Mundo"
 
 if __name__ == "__main__":
-    #app.run(debug=True, host='192.10.1.1')
-    app.run(debug=True, host='192.168.1.3')
+    app.run(debug=True, host='192.168.0.24')
+    #app.run(debug=True, host='192.168.1.3')
     #app.run(debug=True, host='127.0.0.1')

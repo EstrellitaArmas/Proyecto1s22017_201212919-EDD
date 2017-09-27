@@ -1,11 +1,9 @@
 digraph G{
 node [shape = record];
 rankdir = TD;
-activo_Videos [label= "<r0> | <cl1>IdArbol: Videos &#92; | <r1> | <cl2>IdArbol: Carpetas &#92; | <r2> "];
-activo_Videos:r0 -> activo_Carpetas;
+activo_Videos [label= "<r0> | <cl1>IdArbol: Videos &#92; | <r1> "];
+activo_Videos:r0 -> activo_estergema;
 activo_Videos:r1 -> activo_APK;
-activo_Videos:r2 -> activo_Documentos;
-activo_Carpetas [label= "<r0> | <cl1>IdArbol: Carpetas &#92; | <r1> | <cl2>IdArbol: Documentos &#92; | <r2> "];
+activo_estergema [label= "<r0> | <cl1>IdArbol: estergema &#92; | <r1> | <cl2>IdArbol: Documentos &#92; | <r2> "];
 activo_APK [label= "<r0> | <cl1>IdArbol: APK &#92; | <r1> | <cl2>IdArbol: Archivos &#92; | <r2> "];
-activo_Documentos [label= "<r0> | <cl1>IdArbol: Documentos &#92; | <r1> | <cl2>IdArbol: Videos &#92; | <r2> | <cl3>IdArbol: APK &#92; | <r3> | <cl4>IdArbol: Archivos &#92; | <r4> "];
 }

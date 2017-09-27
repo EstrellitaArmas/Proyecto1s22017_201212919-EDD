@@ -20,7 +20,7 @@ class ArbolAVL(object):
             temp = self.retornarAVL(nuevoNodo, usuario) 
             if temp == None:
                 h = Logical(False)
-                usuario.raizAVL.raiz = self.agregarAVL(usuario.raizAVL.raiz, nuevoNodo, h)
+                usuario.raizRoot.raizAVL.raiz = self.agregarAVL(usuario.raizRoot.raizAVL.raiz, nuevoNodo, h)
                 print("nodo agregado correctamente"+ str(nuevoNodo.nombre))
             else:
                 print("ya existe")
@@ -66,14 +66,14 @@ class ArbolAVL(object):
         return raiz    
     
     def retornarAVL(self, nuevoNodo, nodoCircular): 
-        nodoCircular.raizAVL.encontro = None
-        self.buscarAVL(nodoCircular.raizAVL.raiz, nuevoNodo, nodoCircular)
-        return nodoCircular.raizAVL.encontro
+        nodoCircular.raizRoot.raizAVL.encontro = None
+        self.buscarAVL(nodoCircular.raizRoot.raizAVL.raiz, nuevoNodo, nodoCircular)
+        return nodoCircular.raizRoot.raizAVL.encontro
     
     def buscarAVL(self, raiz, nombre, nodoCircular):  # raiz, nodo avl y nodo Circular
         if raiz != None:
             if nombre == raiz.nombre:
-                nodoCircular.raizAVL.encontro = raiz
+                nodoCircular.raizRoot.raizAVL.encontro = raiz
                 #self.encontro = raiz
             else:
                 self.buscarAVL(raiz.izquierda, nombre, nodoCircular)
@@ -140,7 +140,7 @@ class ArbolAVL(object):
         return nodo2    
                     
     def graficarArbolAVL(self, nodoCircular):
-        nodoAVLTemp = nodoCircular.raizAVL
+        nodoAVLTemp = nodoCircular.raizRoot.raizAVL
         self.digraf = "digraph G{\n"
         archivo = open("arbol.dot", 'w')
         self.graficarPreOrden(nodoAVLTemp.raiz)

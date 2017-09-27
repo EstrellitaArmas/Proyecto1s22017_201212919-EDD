@@ -1,12 +1,11 @@
 from ArbolAVL import ArbolAVL 
 
 class NodoB(object):
-	def __init__(self, idNombre=None, nombreCarpeta=None, direccion=None):
+	def __init__(self, idNombre=None, nombreCarpeta=None):
 		self.idNombre = idNombre
 		self.nombreCarpeta = nombreCarpeta
-		self.nodoAVL = ArbolAVL()
-		#self.nodoB = ArbolB()
-		self.direccion = direccion
+		self.raizAVL = ArbolAVL()
+		self.raizB = None
 
 class Pagina(object): 
 	def __init__(self, ramas=[0,0,0,0,0], claves=[0,0,0,0], cuentas=0):		
@@ -17,17 +16,17 @@ class Pagina(object):
 class ArbolB(object):
 	def __init__(self):
 		self.inicio = Pagina()
-		self.inicio2 = Pagina()
+		#self.inicio2 = Pagina()
 		self.inserta = NodoB()
 		self.enlace = Pagina()
 		self.pivote = False
 		self.existe = False
 		self.existe2 = False
-		
+		self.encontrado = None
 		
 	#Crea el Nodo del Arbol B
-	def crearNodoInsertar(self, idNombre, nombreCarpeta, direccion):
-		nodob = NodoB(idNombre, nombreCarpeta, direccion)
+	def crearNodoInsertar(self, idNombre, nombreCarpeta):
+		nodob = NodoB(idNombre, nombreCarpeta)
 		self.InsertarArbolB(nodob, self.inicio)
 		
 	
@@ -154,6 +153,33 @@ class ArbolB(object):
 		
 		return valor
 	
+	#Virificar si Existe el Nodo	
+	def existeCarpeta(self, clave, raiz): #clave = nod0 , raiz
+		valor =0
+		if(clave.idNombre < raiz.claves[0].idNombre):
+			self.existe2 = False
+			valor = 0
+		else:
+			valor = raiz.cuentas
+			while (clave.idNombre < raiz.claves[valor - 1].idNombre and valor > 1):
+				valor-=1
+			
+			if (clave.idNombre < raiz.claves[valor - 1].idNombre):
+				self.existe = True
+				self.encontrado = clave
+			else:
+				self.existe = False
+			
+			if (clave.idNombre == raiz.claves[valor - 1].idNombre):
+				self.existe2 = True
+				self.encontrado = clave
+			else:
+				self.existe2 = False			
+			
+		
+		return valor
+
+
 	#Crear Archivo
 	def dibujarArbol(self):
 		archivo=open('arbolB.dot', 'w')
@@ -191,6 +217,8 @@ class ArbolB(object):
 				while j <= nodo.cuentas:
 					self.grabarArchivo(nodo.ramas[j],archivo)
 					j+=1
+
+	
 					
 					
 					
