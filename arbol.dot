@@ -1,6 +1,4 @@
 digraph G{
-nodo_archivo1 [label="archivo1"]
-nodo_archivo1 -> nodo_archivo2
 nodo_archivo2 [label="archivo2"]
 
 }

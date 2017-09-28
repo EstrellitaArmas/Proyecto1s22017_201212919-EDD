@@ -4,6 +4,7 @@ from ListaDobleEnlazada import ListaDobleEnlazada
 from ListaDobleEnlazada import NodoDoble 
 from ArbolAVL import ArbolAVL 
 from ArbolAVL import NodoAVL 
+
 from ListaEnlazada import ListaEnlazada 
 from ListaEnlazada import Nodo
 from ArbolB import NodoB
@@ -57,15 +58,17 @@ def insertarNodoAVLTEMP():
     #fileJson = request.form["fileJsonStr"]
     objFile = request.json
     usuario = listaUsuarios.obtenerUsuario(objFile["user"])  
-    if(objFile["carpeta"]!=None):
-        arbolB = listaUsuarios.obtenerArbolB(request.data)
+    if(objFile["carpeta"] != "-"):
+        print str(objFile["carpeta"])
+        arbolB = listaUsuarios.obtenerArbolB(objFile["user"])
         arbolB.existeCarpeta(NodoB(objFile["idCarpeta"], objFile["carpeta"]),arbolB.inicio)
-        arbolAVL = arbolB.encontrado.raizAVL
+        arbolAVL = arbolB.carpeta.raizAVL
+        arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),arbolB.carpeta)
     else :    
         arbolAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])   
-        
-    arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),usuario)
-    arbolAVL.graficarArbolAVL(usuario)
+        arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),usuario.raizRoot)
+    
+    arbolAVL.graficarArbolAVL(arbolB.carpeta)
     return "true"
 
 @app.route('/recuperarArchivo', methods=['POST'])
@@ -83,8 +86,8 @@ def recuperarArchivo():
 def recuperarCarpeta():
     arbolB = listaUsuarios.obtenerArbolB(request.data)
     arbolB.existeCarpeta(NodoB(30, "Videos"),arbolB.inicio)
-    arbolAVL = arbolB.encontrado.raizAVL
-    jsonString = json.dumps(arbolB.encontrado, default = jsonDefault )
+    arbolAVL = arbolB.carpeta.raizAVL
+    jsonString = json.dumps(arbolB.carpeta, default = jsonDefault )
     return jsonString
 
 @app.route('/insertarCarpeta',methods=['POST']) 

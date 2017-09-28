@@ -22,7 +22,7 @@ class ArbolB(object):
 		self.pivote = False
 		self.existe = False
 		self.existe2 = False
-		self.encontrado = None
+		self.carpeta = None
 		
 	#Crea el Nodo del Arbol B
 	def crearNodoInsertar(self, idNombre, nombreCarpeta):
@@ -166,13 +166,13 @@ class ArbolB(object):
 			
 			if (clave.idNombre < raiz.claves[valor - 1].idNombre):
 				self.existe = True
-				self.encontrado = clave
+				self.carpeta = raiz.claves[valor - 1]
 			else:
 				self.existe = False
 			
 			if (clave.idNombre == raiz.claves[valor - 1].idNombre):
 				self.existe2 = True
-				self.encontrado = clave
+				self.carpeta = raiz.claves[valor - 1]
 			else:
 				self.existe2 = False			
 			
