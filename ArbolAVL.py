@@ -17,14 +17,20 @@ class ArbolAVL(object):
             self.byteFile = None  
             self.encontro = None             
 
-    def agregarAVL1(self, nuevoNodo, carpeta): #nodo avl y carpeta de la circular       
+    def agregarAVL1(self, nuevoNodo, carpeta,remplazar): #nodo avl y carpeta de la circular       
             temp = self.retornarAVL(nuevoNodo, carpeta) 
             if temp == None:
                 h = Logical(False)
                 carpeta.raizAVL.raiz = self.agregarAVL(carpeta.raizAVL.raiz, nuevoNodo, h)
                 print("nodo agregado correctamente"+ str(nuevoNodo.nombre))
+                return "true"
             else:
+                if remplazar == True: 
+                    temp.archivo = nuevoNodo.archivo
+                    return "true"
                 print("ya existe")
+                return temp
+                
         
     def agregarAVL(self, raiz, nuevoNodo, h):
         if raiz == None:

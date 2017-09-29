@@ -154,31 +154,27 @@ class ArbolB(object):
 		return valor
 	
 	#Virificar si Existe el Nodo	
-	def existeCarpeta(self, clave, raiz): #clave = nod0 , raiz
+	def existeCarpeta(self, idNombre, raiz): #clave = nod0 , raiz
 		valor =0
-		if(clave.idNombre < raiz.claves[0].idNombre):
+		if(idNombre < raiz.claves[0].idNombre):
 			self.existe2 = False
 			valor = 0
 		else:
 			valor = raiz.cuentas
-			while (clave.idNombre < raiz.claves[valor - 1].idNombre and valor > 1):
+			while (idNombre < raiz.claves[valor - 1].idNombre and valor > 1):
 				valor-=1
 			
-			if (clave.idNombre < raiz.claves[valor - 1].idNombre):
+			if (idNombre < raiz.claves[valor - 1].idNombre):
 				self.existe = True
 				self.carpeta = raiz.claves[valor - 1]
 			else:
 				self.existe = False
 			
-			if (clave.idNombre == raiz.claves[valor - 1].idNombre):
+			if (idNombre == raiz.claves[valor - 1].idNombre):
 				self.existe2 = True
 				self.carpeta = raiz.claves[valor - 1]
 			else:
-				self.existe2 = False			
-			
-		
-		return valor
-
+				self.existe2 = False
 
 	#Crear Archivo
 	def dibujarArbol(self):

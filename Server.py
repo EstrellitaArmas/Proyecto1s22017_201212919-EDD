@@ -63,13 +63,14 @@ def insertarNodoAVLTEMP():
         arbolB = listaUsuarios.obtenerArbolB(objFile["user"])
         arbolB.existeCarpeta(NodoB(objFile["idCarpeta"], objFile["carpeta"]),arbolB.inicio)
         arbolAVL = arbolB.carpeta.raizAVL
-        arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),arbolB.carpeta)
+        respuesta = arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),arbolB.carpeta,False)
+        arbolAVL.graficarArbolAVL(arbolB.carpeta)
     else :    
-        arbolAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])   
-        arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),usuario.raizRoot)
+        arbolAVL = listaUsuarios.obtenerArbolAVL(objFile["user"])   
+        respuesta = arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),usuario.raizRoot,False)
+        arbolAVL.graficarArbolAVL(usuario.raizRoot)    
     
-    arbolAVL.graficarArbolAVL(arbolB.carpeta)
-    return "true"
+    return respuesta
 
 @app.route('/recuperarArchivo', methods=['POST'])
 def recuperarArchivo():
@@ -84,11 +85,21 @@ def recuperarArchivo():
 
 @app.route('/recuperarCarpeta',methods=['POST']) 
 def recuperarCarpeta():
-    arbolB = listaUsuarios.obtenerArbolB(request.data)
-    arbolB.existeCarpeta(NodoB(30, "Videos"),arbolB.inicio)
-    arbolAVL = arbolB.carpeta.raizAVL
+    objCarpeta = request.json
+    arbolB = listaUsuarios.obtenerArbolB(objCarpeta["user"])
+    arbolB.existeCarpeta(objCarpeta["idCarpeta"],arbolB.inicio)
+    #arbolAVL = arbolB.carpeta.raizAVL
     jsonString = json.dumps(arbolB.carpeta, default = jsonDefault )
     return jsonString
+
+@app.route('/modificarCarpeta',methods=['POST']) 
+def modificarCarpeta():
+    objCarpeta = request.json
+    arbolB = listaUsuarios.obtenerArbolB(objCarpeta["user"])
+    arbolB.existeCarpeta(objCarpeta["idCarpeta"],arbolB.inicio)
+    arbolB.carpeta.nombreCarpeta = objCarpeta["nombreCarpeta"] 
+    jsonString = json.dumps(arbolB.carpeta, default = jsonDefault)
+    return jsonString    
 
 @app.route('/insertarCarpeta',methods=['POST']) 
 def insertarNodoB():
