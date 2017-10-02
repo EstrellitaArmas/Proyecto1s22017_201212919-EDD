@@ -62,8 +62,6 @@ public class Crear extends HttpServlet {
    @Override
    protected void doPost(HttpServletRequest request, HttpServletResponse response)
            throws ServletException, IOException {
-//      String pathArchivo = request.getRequestURI();
-//      System.out.println(pathArchivo);
       try{
          FileItemFactory factory = new DiskFileItemFactory();
          ServletFileUpload upload = new ServletFileUpload(factory);
@@ -74,21 +72,19 @@ public class Crear extends HttpServlet {
             FileItem uploaded = (FileItem) item;
             // Hay que comprobar si es un campo de formulario. Si no lo es, se guarda el fichero subido donde nos interese
             if (!uploaded.isFormField()) {
-               
-               File fichero = new File("C:\\Users\\estre\\Desktop\\" + uploaded.getName()); 
-               String fileJsonStr = "";
+                
+                String fileJsonStr = "";
                try {
                   // Con este código se obtienen los bytes del archivo.
-                  FileInputStream fileInputStream = new FileInputStream(fichero);
-                  BufferedInputStream input = new BufferedInputStream(fileInputStream);
-                  byte[] fileArray = new byte[(int) fichero.length()];
+                  BufferedInputStream input = new BufferedInputStream(uploaded.getInputStream());
+                  byte[] fileArray = new byte[(int) uploaded.getSize()];
                   input.read(fileArray); // el contenido leido se almacena en el array de bytes
                   input.close();
                   
                   //Se almacena el array de bytes y el nombre en un objeto
                   FileJsonDTO fileJson = new FileJsonDTO();
                   fileJson.setFileBytes(fileArray);
-                  fileJson.setFileName(fichero.getName());
+                  fileJson.setFileName(uploaded.getName());
                   //Se convierte el objeto en un string tipo Json
                   fileJsonStr = ParserJson.parseObjectToStr(fileJson);
               

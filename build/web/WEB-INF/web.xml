@@ -8,5 +8,9 @@
         <session-timeout>
             30
         </session-timeout>
-    </session-config>     
+    </session-config>
+    <servlet>
+       <servlet-name>ActionServlet</servlet-name>
+       <servlet-class>Menu.ActionServlet</servlet-class>
+    </servlet>
 </web-app>

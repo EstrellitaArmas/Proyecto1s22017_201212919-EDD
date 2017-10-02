@@ -8,6 +8,20 @@ Author URI: http://themeforest.net/user/XpeedStudio/portfolio
    Author's custom styles
    ========================================================================== */
 html,
+.collapsibleList li{
+  list-style-image : url('button.png');
+  cursor           : auto;
+}
+
+li.collapsibleListOpen{
+  list-style-image : url('button-open.png');
+  cursor           : pointer;
+}
+
+li.collapsibleListClosed{
+  list-style-image : url('button-closed.png');
+  cursor           : pointer;
+}
 body {
     background-color: #ffffff;
     font-size: 15px;
@@ -613,7 +627,7 @@ input:-ms-input-placeholder {
 
 #home{
     background-color:#fcbd58;
-    color:#fff;
+    color:#000;
 }
 .homepage-style{
     padding-top:100px;

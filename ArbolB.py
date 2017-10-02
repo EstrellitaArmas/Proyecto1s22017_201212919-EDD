@@ -1,12 +1,11 @@
 from ArbolAVL import ArbolAVL 
 
 class NodoB(object):
-	def __init__(self, idNombre=None, nombreCarpeta=None, direccion=None):
+	def __init__(self, idNombre=None, nombreCarpeta=None):
 		self.idNombre = idNombre
 		self.nombreCarpeta = nombreCarpeta
-		self.nodoAVL = ArbolAVL()
-		#self.nodoB = ArbolB()
-		self.direccion = direccion
+		self.arbolAVL = ArbolAVL()
+		self.arbolB = None
 
 class Pagina(object): 
 	def __init__(self, ramas=[0,0,0,0,0], claves=[0,0,0,0], cuentas=0):		
@@ -17,17 +16,17 @@ class Pagina(object):
 class ArbolB(object):
 	def __init__(self):
 		self.inicio = Pagina()
-		self.inicio2 = Pagina()
 		self.inserta = NodoB()
 		self.enlace = Pagina()
 		self.pivote = False
 		self.existe = False
 		self.existe2 = False
+		self.carpeta = None
 		
-		
+############################################################################		
 	#Crea el Nodo del Arbol B
-	def crearNodoInsertar(self, idNombre, nombreCarpeta, direccion):
-		nodob = NodoB(idNombre, nombreCarpeta, direccion)
+	def crearNodoInsertar(self, idNombre, nombreCarpeta):
+		nodob = NodoB(idNombre, nombreCarpeta)
 		self.InsertarArbolB(nodob, self.inicio)
 		
 	
@@ -69,7 +68,7 @@ class ArbolB(object):
 					else:
 						self.pivote = True
 						self.dividirPagina(self.inserta, raiz, pos)
-						print("Inserto")
+						print("Inserto: "+ clave.nombreCarpeta + "id: "+ str(clave.idNombre))
 			
 			
 	#Verificar si la raiz no Existe
@@ -93,7 +92,7 @@ class ArbolB(object):
 		raiz.ramas[posicion + 1] = self.enlace
 		val = raiz.cuentas+1
 		raiz.cuentas = val
-		print("Inserto Valor")
+		print("Inserto Valor: "+ clave.nombreCarpeta + "id: "+ str(clave.idNombre))
 		
 		
 	#Dividir Pagina
@@ -153,10 +152,34 @@ class ArbolB(object):
 			
 		
 		return valor
+###########################################################################
+	#Buscar Nodo
+	def retornarNodoArbolB(self, idBuscar, nombreCarpeta):	
+		#self.inicio = raiz 
+		clave = NodoB(idBuscar, nombreCarpeta)
+		return self.retornarNodo(clave, self.inicio)
 	
+	#Buscar Nodo
+	def retornarNodo(self, clave, raiz):
+		valorEncontrado = None
+		pos = 0
+		vacioBol = self.vacio(raiz)
+		
+		if(vacioBol == True):
+			print("No Existe")
+		else:
+			pos = self.existeNodo(clave, raiz)
+			if(self.existe2 == True):
+				valorEncontrado = raiz.claves[pos - 1]				
+			else:
+				valorEncontrado = self.retornarNodo(clave, raiz.ramas[pos])
+		return valorEncontrado
+
+
+#############################################################################
 	#Crear Archivo
-	def dibujarArbol(self):
-		archivo=open('arbolB.dot', 'w')
+	def dibujarArbol(self , nombreUsuario):
+		archivo=open('arbolB'+ nombreUsuario +'.dot', 'w')
 		archivo.write('digraph G{\n')
 		archivo.write("node [shape = record];\n");
 		archivo.write("rankdir = TD;\n");
@@ -168,7 +191,7 @@ class ArbolB(object):
 	def grabarArchivo(self, raiz, archivo):
 		nodo = raiz				
 		if(nodo == None):
-			print("No hay nada que Graficar")
+			print("---")
 		else:
 			if (nodo.cuentas != 0):
 				archivo.writelines("activo_" + str(nodo.claves[0].nombreCarpeta) + " [label= \"")

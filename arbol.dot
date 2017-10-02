@@ -1,10 +1,4 @@
 digraph G{
-nodo_HuaweiAndroidUsbDriverv10zip [label="HuaweiAndroidUsbDriverv10zip"]
-nodo_HuaweiAndroidUsbDriverv10zip -> nodo_FormulariodeGatodocx
-nodo_FormulariodeGatodocx [label="FormulariodeGatodocx"]
-nodo_HuaweiAndroidUsbDriverv10zip -> nodo_mensajeLocalxml
 nodo_mensajeLocalxml [label="mensajeLocalxml"]
-nodo_mensajeLocalxml -> nodo_pilapostordentxt
-nodo_pilapostordentxt [label="pilapostordentxt"]
 
 }

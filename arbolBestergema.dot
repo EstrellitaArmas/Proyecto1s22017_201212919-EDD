@@ -1,0 +1,5 @@
+digraph G{
+node [shape = record];
+rankdir = TD;
+activo_estergema [label= "<r0> | <cl1>IdArbol: estergema &#92; | <r1> | <cl2>IdArbol: estergema &#92; | <r2> "];
+}

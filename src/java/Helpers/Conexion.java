@@ -17,7 +17,7 @@ import java.net.URL;
  * @author estre
  */
 public class Conexion {
-   private static String IpLocal = "192.168.1.3"; 
+   private static String IpLocal = "127.0.0.1"; 
    public static String postString(String metodo, RequestBody formBody) {
 
         try {

@@ -6,21 +6,20 @@ class NodoAVL(object):
         self.izquierda = izquierda
         self.derecha = derecha
         self.padre = padre
-        self.raiz = None
+        self.raiz = None    
         self.encontro = None
-                    
 
-class ArbolAVL(object):
+class ArbolAVL(object): 
     def __init__ (self):
-            self.raiz = None
-            valor = "" 
-            self.byteFile = None               
+            self.raiz = NodoAVL()
+            self.byteFile = None 
+                         
 
-    def agregarAVL1(self, nuevoNodo, usuario): #nodo avl y usuario de la circular       
-            temp = self.retornarAVL(nuevoNodo, usuario) 
+    def agregarAVL1(self, nuevoNodo, carpeta): #nodo avl y usuario de la circular       
+            temp = self.retornarAVL(nuevoNodo, carpeta) 
             if temp == None:
                 h = Logical(False)
-                usuario.raizAVL.raiz = self.agregarAVL(usuario.raizAVL.raiz, nuevoNodo, h)
+                carpeta.arbolAVL.raiz = self.agregarAVL(carpeta.arbolAVL.raiz, nuevoNodo, h)
                 print("nodo agregado correctamente"+ str(nuevoNodo.nombre))
             else:
                 print("ya existe")
@@ -65,20 +64,19 @@ class ArbolAVL(object):
                     h.setLogical(False)
         return raiz    
     
-    def retornarAVL(self, nuevoNodo, nodoCircular): 
-        nodoCircular.raizAVL.encontro = None
-        self.buscarAVL(nodoCircular.raizAVL.raiz, nuevoNodo, nodoCircular)
-        return nodoCircular.raizAVL.encontro
+    def retornarAVL(self, nuevoNodo, carpeta): 
+        carpeta.arbolAVL.raiz.encontro = None
+        self.buscarAVL(carpeta.arbolAVL.raiz, nuevoNodo, carpeta)
+        return carpeta.arbolAVL.raiz.encontro
     
-    def buscarAVL(self, raiz, nombre, nodoCircular):  # raiz, nodo avl y nodo Circular
-        if raiz != None:
+    def buscarAVL(self, raiz, nombre, carpeta):  # raiz, nodo avl y nodo Circular
+       if raiz != None:
             if nombre == raiz.nombre:
-                nodoCircular.raizAVL.encontro = raiz
+                carpeta.arbolAVL.raiz.encontro = raiz
                 #self.encontro = raiz
             else:
-                self.buscarAVL(raiz.izquierda, nombre, nodoCircular)
-                self.buscarAVL(raiz.derecha, nombre, nodoCircular) 
-
+                self.buscarAVL(raiz.izquierda, nombre, carpeta)
+                self.buscarAVL(raiz.derecha, nombre, carpeta) 
                     
        
     def rotacionID(self, nodo, nodo1):
@@ -140,9 +138,9 @@ class ArbolAVL(object):
         return nodo2    
                     
     def graficarArbolAVL(self, nodoCircular):
-        nodoAVLTemp = nodoCircular.raizAVL
+        nodoAVLTemp = nodoCircular.raizRoot.arbolAVL
         self.digraf = "digraph G{\n"
-        archivo = open("arbol.dot", 'w')
+        archivo = open("arbol"+nodoCircular.nombre+".dot", 'w')
         self.graficarPreOrden(nodoAVLTemp.raiz)
         self.digraf += "\n}"
         archivo.write(self.digraf)

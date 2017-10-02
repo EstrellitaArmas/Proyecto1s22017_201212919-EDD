@@ -1,0 +1,5 @@
+digraph G{
+node [shape = record];
+rankdir = TD;
+activo_carpeta13 [label= "<r0> | <cl1>IdArbol: carpeta13 &#92; | <r1> "];
+}

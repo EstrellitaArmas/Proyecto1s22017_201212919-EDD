@@ -11,7 +11,6 @@ import Helpers.ParserJson;
 import static Inicio.Login.setError;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -95,14 +94,14 @@ public class Descargar extends HttpServlet {
             // Parsea el string Json en un objeto con los atributos fileName y fileBytes
             FileJsonDTO fileObject = ParserJson.parseStrToObject(res, FileJsonDTO.class);
             //Con este código se agregan los bytes al archivo.
-            FileOutputStream fileOuputStream = new FileOutputStream("C:\\Users\\estre\\Desktop\\"+nombreArchivo);
+            FileOutputStream fileOuputStream = new FileOutputStream("C:\\Users\\estre\\Desktop\\Copia"+nombreArchivo);
             fileOuputStream.write(fileObject.getFileBytes());
             fileOuputStream.close();
         }catch(NumberFormatException | IOException e){
               System.out.println("ERROR en Descarga: "+ e);
         }
         
-        
+        response.sendRedirect("Menu.jsp");
    }
 
    /**

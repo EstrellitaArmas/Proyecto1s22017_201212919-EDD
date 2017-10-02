@@ -41,7 +41,7 @@ def validarUsuario():
 
 @app.route('/insertarArchivo',methods=['POST']) 
 def insertarNodoAVL():
-    print str(request.form["fileJsonStr"])
+    #print str(request.form["fileJsonStr"])
     fileJson = request.form["fileJsonStr"]
     objFile = json.loads(fileJson)
     usuario = listaUsuarios.obtenerUsuario(request.form["user"])
@@ -50,13 +50,32 @@ def insertarNodoAVL():
     raiz.graficarArbolAVL(usuario)
     return "true"
 
+@app.route('/insertarArchivoTEMP',methods=['POST']) 
+def insertarNodoAVLTEMP():
+    #fileJson = request.form["fileJsonStr"]
+    objFile = request.json
+    usuario = listaUsuarios.obtenerUsuario(objFile["user"])  
+    if(objFile["carpeta"] != "-"):
+        #print str(objFile["carpeta"])
+        arbolB = listaUsuarios.obtenerArbolB(objFile["user"])
+        carpeta = arbolB.retornarNodoArbolB(objFile["idCarpeta"], objFile["carpeta"])    
+        arbolAVL = carpeta.arbolAVL
+        respuesta = arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),arbolB.carpeta)
+        arbolAVL.graficarArbolAVL(arbolB.carpeta)
+    else :    
+        arbolAVL = listaUsuarios.obtenerArbolAVL(objFile["user"])   
+        respuesta = arbolAVL.agregarAVL1(NodoAVL(objFile["fileName"],objFile["fileBytes"]),usuario.raizRoot)
+        arbolAVL.graficarArbolAVL(usuario.raizRoot)    
+    
+    return respuesta
+
 @app.route('/recuperarArchivo', methods=['POST'])
 def recuperarArchivo():
     arbolAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])   #retorna arbolAvl del usuario 
     #busca el nodo que contiene el archivo y lo asigna a la variable byteFile
     arbolAVL.buscarArchivo(arbolAVL.raiz, request.form["nombreArchivo"]) # Raiz del arbol y nombre archivo
     archivo = arbolAVL.byteFile 
-    #print "BYTES---" + str(archivo.archivo)
+    print "BYTES---" + str(archivo.archivo)
     objFile = {"fileName" : archivo.nombre , "fileBytes": archivo.archivo} 
     jsonFile = json.dumps(objFile, default = jsonDefault )
     return jsonFile
@@ -64,39 +83,45 @@ def recuperarArchivo():
 
 @app.route('/insertarCarpeta',methods=['POST']) 
 def insertarNodoB():
-    raizB = listaUsuarios.obtenerArbolB("estergema")
+    objCarpeta = request.json
+    usuario = listaUsuarios.obtenerUsuario(objCarpeta["user"])
+    raizB = listaUsuarios.obtenerArbolB(objCarpeta["user"])
     #raizB = listaUsuarios.obtenerArbolB(request.form["user"])
-    #raizB.crearNodoInsertar(request.form["id"], request.form["nombre"], "C1")
-    raizB.crearNodoInsertar(10, "Carpetas", "C1")
-    raizB.crearNodoInsertar(20, "Documentos", "C2")
-    raizB.crearNodoInsertar(30, "Videos", "C3")  
-    raizB.crearNodoInsertar(40, "APK", "C4")  
-    raizB.crearNodoInsertar(50, "Archivos", "C5") 
-    raizB.crearNodoInsertar(60, "Carpetas", "C6")
-    raizB.crearNodoInsertar(70, "Documentos", "C7")
-    raizB.crearNodoInsertar(80, "Videos", "C8")  
-    raizB.crearNodoInsertar(90, "APK", "C9")  
-    raizB.crearNodoInsertar(100, "Archivos", "C10") 
-    raizB.dibujarArbol() 
+    if(raizB == None):
+        raizB = ArbolB()   
+    usuario.raizRoot.arbolB = raizB
+    raizB.crearNodoInsertar(objCarpeta["id"], objCarpeta["nombre"]) #id del nombre.. generar id en java con un .hashcode()
+    raizB.dibujarArbol(usuario.nombre) 
     return "true"
 
 @app.route('/obtenerRaices',methods=['POST']) 
 def obtenerRaices():
-    raizAVL = listaUsuarios.obtenerArbolAVL(request.form["user"])
-    raizB = listaUsuarios.obtenerArbolB(request.form["user"])
+    raizAVL = listaUsuarios.obtenerArbolAVL(request.data)
+    raizB = listaUsuarios.obtenerArbolB(request.data)
     raices = {'raizAVL': raizAVL ,'raizB': raizB}
     jsonString = json.dumps(raices, default = jsonDefault )
-    print str(jsonString)
+    #print str(jsonString)
+    return jsonString
+
+@app.route('/recuperarCarpeta',methods=['POST']) 
+def recuperarCarpeta():
+    objCarpeta = request.json
+    #print objCarpeta
+    arbolB = listaUsuarios.obtenerArbolB(objCarpeta["user"])
+    carpeta = arbolB.retornarNodoArbolB(objCarpeta["idCarpeta"], objCarpeta["nombre"])    
+    #carpetasHijas = carpeta.raizB.inicio
+    objCarpeta = {"nombreCarpeta" : carpeta.nombreCarpeta , "idCarpeta": carpeta.idNombre} 
+    jsonString = json.dumps(objCarpeta, default = jsonDefault )
     return jsonString
 ###################################RESPUESTAS##########################
 
 #################################################################################################
    
-@app.route('/hola')
+@app.route('/hola',methods=['POST'])
 def he():
-    return "hola Mundo"
+    return "hola Mundo"+ str(request.form["dato"])
 
 if __name__ == "__main__":
     #app.run(debug=True, host='192.10.1.1')
-    app.run(debug=True, host='192.168.1.3')
-    #app.run(debug=True, host='127.0.0.1')
+    #app.run(debug=True, host='192.168.1.3')
+    app.run(debug=True, host='127.0.0.1')

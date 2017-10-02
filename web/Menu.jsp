@@ -39,6 +39,9 @@
         <link rel="stylesheet" href="assets/css/ace-fonts.css" />
         <!-- ace styles -->
         <link rel="stylesheet" href="assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+        <!-- ace settings handler -->
+        <script src="assets/js/ace-extra.js"></script>
+
     </head>
    <body  data-spy="scroll" data-target="#main-navbar">
         <div class='preloader'><div class='loaded'>&nbsp;</div></div>
@@ -56,7 +59,7 @@
                           <li><a href="#modificar">Modificar</a></li>
                           <li><a href="#eliminar">Eliminar</a></li>
                           <li><a href="#compartir">Compartir</a></li>
-                          <li class="light-blue">
+                          <li>
                              <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                                 <span class="user-info">
                                    <%= session.getAttribute("sesionusuario") %>
@@ -75,38 +78,33 @@
         <header id="home" class="sections">
            <div class="row">
               <div class="homepage-style">
+                 <div class="container">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="widget-box widget-color-green2">
+                           <div class="widget-header">
+                              <h4 class="widget-title lighter smaller">My Drive</h4>
+                           </div>
 
-                 <div class="top-arrow hidden-xs text-center"><img src="assets/images/top-arrow.png" alt="" /></div>
-
-                 <div class="col-md-12 col-sm-6 col-xs-12">
-                    <div class="unique-apps">
-                       <div class="feature-wrapper">
-                          <div class="row">
-                             <div class="main-team text-center">
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                   <div class="team-member">
-                                      <img class="img-circle" src="assets/images/team/2.png" alt="" />
-                                      <i class="fa fa-folder-open-o fa-5x"></i> 
-                                      <h5>SAYED MIRAJ</h5>
-                                      <p>UI & UX DESIGNER</p>
-                                   </div>
-                                </div>
-
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                   <div class="team-member">
-                                      <img class="img-circle" src="assets/images/team/2.png" alt="" />
-                                      <i class="fa fa-file-o fa-5x"></i>
-                                      <h5>PENNY HUSTON</h5>
-                                      <p>DEVELOPER</p>
-                                   </div>
-                                </div>
-                             </div>                                                        
-                          </div>	
-                       </div>	
-                    </div>
-                 </div>
-              </div>	
-           </div>
+                           <div class="widget-body">
+                              <div class="widget-main padding-8">
+                                 <ul class="collapsibleList">
+                                    <li><button name="raizRoot" value="raizRoot">
+                                          	<i class="fa fa-folder">raizRoot</i>
+                                       </button>
+                                       <ul>
+                                          <div id="tabla"></div>
+                                          <li>Child item</li>
+                                          <li>Child item</li>
+                                       </ul>
+                                    </li>
+                                 </ul>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                 </div>                                                                             
+               </div>
+            </div>
         </header>
         <section id="crear" class="sections">
          <div class="container">           
@@ -136,7 +134,7 @@
                                     </div>
                                     <!-- #section:custom/file-input.filter -->
                                     <label>
-                                       <button class="submit" onclick="check()">
+                                       <button class="submit" >
                                           Subir Archivo
                                           <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
                                        </button>
@@ -174,6 +172,33 @@
                            </div>
                         </div>                        
                      </form>                        
+                     <form method="post" action="crearCarpeta">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <div class="widget-box">
+                              <div class="widget-header">
+                                 <h4 class="widget-title">Crear Carpeta</h4>
+                              </div>
+                              <div class="widget-body">
+                                 <div class="widget-main">                            
+                                    <div class="form-group">
+                                       <div class="col-xs-12">
+                                          <input class="form-control" type="text" id="nombreCarpeta" name="nombreCarpeta" placeholder="Nombre de Archivo">
+                                       </div> 
+                                       <label>
+                                          <button class="submit">
+                                             Crear
+                                             <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                                          </button>
+                                       </label>   
+                                    </div>
+                                    <!-- #section:custom/file-input.filter -->
+                                                            
+                                    <!-- /section:custom/file-input.filter -->
+                                 </div>
+                              </div>
+                           </div>
+                        </div>                        
+                     </form>                        
                   </div>                  
                </div>               
             </div>
@@ -198,14 +223,14 @@
 
 
 <script src="assets/js/jquery.autosize.js"></script>
-<script src="assets/js/jquery.inputlimiter.1.3.1.js"></script>
-<script src="assets/js/jquery.maskedinput.js"></script>
 <script src="assets/js/bootstrap-tag.js"></script>
 
 <!-- ace scripts -->
 <script src="assets/js/ace/elements.fileinput.js"></script>
 <script src="assets/js/ace/ace.js"></script>
 <script src="assets/js/ace/ace.widget-box.js"></script>
+<script src="assets/js/fuelux/fuelux.tree.js"></script>
+<script src="assets/js/ace/elements.treeview.js"></script>
 
 <script type="text/javascript">
    jQuery(function($) {
@@ -215,16 +240,7 @@
               btn_change:null,
               no_icon:'ace-icon fa fa-cloud-upload',
               droppable:true,
-              thumbnail:'small'//large | fit
-              //,icon_remove:null//set null, to hide remove/reset button
-              /**,before_change:function(files, dropped) {
-                      //Check an example below
-                      //or examples/file-upload.html
-                      return true;
-              }*/
-              /**,before_remove : function() {
-                      return true;
-              }*/
+              thumbnail:'small'
               ,
               preview_error : function(filename, error_code) {
                       //name of the file that failed
@@ -236,9 +252,16 @@
               }
 
       }).on('change', function(){
-              //console.log($(this).data('ace_input_files'));
-              //console.log($(this).data('ace_input_method'));
-      });
-   });
+      });       
+      
+      $("button").click(function() {
+            var nombreVar = $(this).val();
+            $.post('ActionServlet', {
+                  nombre : nombreVar,
+            }, function(responseText) {
+                  $('#tabla').html(responseText);
+            });
+        });
+   });        
  
 </script>
